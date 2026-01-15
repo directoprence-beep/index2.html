@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuizMaster | Pattao National High School</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(180deg, #fffaf7 0%, #ffffff 100%);
+}
+</style>
+</head>
+
+<body class="min-h-screen flex justify-center items-center p-4">
+
+<div class="bg-white shadow-xl rounded-xl max-w-3xl w-full p-6">
+
+<h1 class="text-3xl font-bold text-center text-maroon-700 mb-4">📘 QuizMaster</h1>
+<p class="text-center text-gray-500 mb-6">Pattao National High School – Main</p>
+
+<!-- INPUT SECTION -->
+<div class="grid md:grid-cols-3 gap-4 mb-6">
+<input id="teacherName" class="border rounded p-2" placeholder="Teacher's Name">
+<input id="subject" class="border rounded p-2" placeholder="Subject">
+<input id="studentName" class="border rounded p-2" placeholder="Student Name (Required)">
+</div>
+
+<form id="quizForm" class="space-y-6">
+
+<!-- QUESTIONS -->
+<div id="questions"></div>
+
+<button type="submit" class="w-full bg-maroon-700 bg-red-800 text-white py-3 rounded-lg font-semibold hover:bg-red-900 transition">
+Submit Quiz
+</button>
+
+</form>
+
+<!-- RESULT -->
+<div id="result" class="hidden mt-6 bg-gray-100 p-4 rounded-lg">
+<h2 class="text-xl font-bold mb-2">📊 Quiz Result</h2>
+<p id="scoreText"></p>
+<p id="percentageText"></p>
+<p id="correctText"></p>
+<p id="incorrectText"></p>
+</div>
+
+<footer class="text-center mt-6 text-gray-500 text-sm">
+© 2026 Reynaldo P. Usigan, Mylene A. Baquiran
+</footer>
+
+</div>
+
+<script>
+// QUESTION BANK
+const QUESTION_BANK = [
+{q:"Which of the following is the basic unit of life?", options:["Tissue","Organ","Cell","System"], answer:2},
+{q:"Which type of reaction absorbs heat from the surroundings?", options:["Exothermic","Endothermic","Combustion","Neutralization"], answer:1},
+{q:"What is the SI unit of force?", options:["Joule","Newton","Watt","Pascal"], answer:1},
+{q:"Which gas is released during photosynthesis?", options:["Carbon dioxide","Oxygen","Nitrogen","Hydrogen"], answer:1},
+{q:"What is the formula for density?", options:["Mass × Volume","Volume ÷ Mass","Mass ÷ Volume","Mass − Volume"], answer:2},
+{q:"Which part of the atom has a positive charge?", options:["Electron","Neutron","Proton","Nucleus"], answer:2},
+{q:"Which of the following is a renewable resource?", options:["Coal","Petroleum","Natural gas","Solar energy"], answer:3},
+{q:"What type of motion is shown by a swinging pendulum?", options:["Circular","Rectilinear","Periodic","Random"], answer:2},
+{q:"Which vitamin is produced when skin is exposed to sunlight?", options:["Vitamin A","Vitamin B","Vitamin C","Vitamin D"], answer:3},
+{q:"Which organ pumps blood?", options:["Brain","Lungs","Heart","Kidney"], answer:2}
+];
+
+// DISPLAY QUESTIONS
+const questionDiv = document.getElementById("questions");
+
+QUESTION_BANK.forEach((item, index) => {
+    let qHTML = `<div class="bg-gray-50 p-4 rounded-lg">
+    <p class="font-semibold mb-2">${index+1}. ${item.q}</p>`;
+    item.options.forEach((opt, i) => {
+        qHTML += `
+        <label class="block">
+            <input type="radio" name="q${index}" value="${i}" class="mr-2">
+            ${opt}
+        </label>`;
+    });
+    qHTML += `</div>`;
+    questionDiv.innerHTML += qHTML;
+});
+
+// SUBMIT QUIZ
+document.getElementById("quizForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const studentName = document.getElementById("studentName").value.trim();
+    if(studentName === ""){
+        alert("Please enter student name.");
+        return;
+    }
+
+    let score = 0;
+    let correct = 0;
+
+    QUESTION_BANK.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if(selected && parseInt(selected.value) === q.answer){
+            score++;
+            correct++;
+        }
+    });
+
+    const incorrect = QUESTION_BANK.length - correct;
+    const percentage = ((score / QUESTION_BANK.length) * 100).toFixed(2);
+
+    document.getElementById("result").classList.remove("hidden");
+    document.getElementById("scoreText").innerText = `Score: ${score} / 10`;
+    document.getElementById("percentageText").innerText = `Percentage: ${percentage}%`;
+    document.getElement
